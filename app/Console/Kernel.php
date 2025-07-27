@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // Make sure the correct command name is used here
-        $schedule->command('scrape:news')->hourly();
+        $schedule->command('news:scrape')->hourly();
     }
 
     /**
