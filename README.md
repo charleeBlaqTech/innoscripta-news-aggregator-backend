@@ -1,147 +1,86 @@
-# Innoscripta News Aggregator
-
-This is a full-stack news aggregator application built with **Laravel** (PHP) for the backend and **React + TypeScript** for the frontend. 
-
-It supports:
- user registration/login, 
- personalized article feeds, 
- advanced filtering and search, 
- and periodic scraping of news articles.
+# Innoscripta News Aggregator – Fullstack Project Documentation
 
 ---
 
-## 🔧 Tech Stack
+## 📳 Backend – Laravel API
 
-### Backend (Laravel 10)
-
-* Laravel Sanctum (Authentication)
-* Eloquent ORM
-* MySQL (via Docker)
-* Scheduled commands for scraping articles
-
-### Frontend (React + TypeScript)
-
-* Vite + React + TypeScript
-* Axios for HTTP requests
-* TailwindCSS for styling
-* Redux Toolkit (if needed)
-
-### DevOps
-
-* Docker
-* Docker Compose
+A powerful Laravel-based API for a full-stack news aggregator. Supports user authentication, preferences, personalized article feeds, search/filtering, and scraping news from external APIs. Fully Dockerized.
 
 ---
 
-## Features
+### 🔧 Tech Stack
 
-### User Management
-
-* Register and login
-* Authenticated sessions using Laravel Sanctum
-
-### Article Scraping
-
-* Scrapers run via Laravel Artisan schedule (e.g., `php artisan schedule:run`)
-* Articles are saved locally into MySQL
-
-### Personalized Feed
-
-* Users can set preferences for:
-
-  * Preferred source
-  * Preferred category
-  * Preferred author
-* Personalized `/feed` endpoint returns articles based on user preference
-
-### Article Search & Filtering
-
-* Search by keyword
-* Filter by:
-
-  * Source
-  * Category
-  * Date range (from, to)
-
-### Preferences
-
-* `/preferences/options`: returns all available authors, sources, and categories
-* `/preferences`: save user preferences
-
-### Fully Dockerized
-
-* MySQL DB
-* Laravel backend
-* React frontend
+* **Laravel 10**
+* **Sanctum** for authentication
+* **MySQL 8** via Docker
+* **Docker + Docker Compose**
+* **Scheduled artisan command** for scraping articles
 
 ---
 
+### 🚀 Features
 
-
-===================================================================================================
-
-# INNOSCRIPTA NEWS AGGREGATOR (Backend - Laravel)
-
-This is the Laravel backend for the Innoscripta News Aggregator Task. It provides APIs for user authentication, article feeds, search, and user preferences.
-
----
-
-## Features
-
-- User authentication (register, login, logout)
-- Personalized feed based on user preferences
-- Article scraping from:
-  - NewsAPI
-  - The Guardian
-  - The New York Times
-- Full-text search with filters
-- RESTful API structure
-- Scheduler for periodic scraping
+* ✅ **User Auth** – Register, login, logout
+* ✅ **Feed Personalization** – Based on source, category, and author
+* ✅ **News Scraping** – From NewsAPI, The Guardian, and NYT
+* ✅ **Search & Filters** – By keyword, source, category, date range
+* ✅ **RESTful API** – Clean and well-structured
+* ✅ **Dockerized** – Fast local setup
 
 ---
 
+## 🧰 Backend Setup Instructions
 
-## Local Development Setup (Docker)
+### 📦 Step 1: Clone Repository
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- Git (optional)
-
-### Step 1: Clone the Repository
-
-### CMD || BASH
+```bash
 git clone https://github.com/charleeBlaqTech/innoscripta-news-aggregator-backend.git
 cd innoscripta-news-aggregator-backend
+```
 
-### Step 2: Environment Setup
+---
+
+### ⚙️ Step 2: Configure `.env`
+
+```bash
 cp .env.example .env
 php artisan key:generate
-### fill just the values of the env details below after creating a .env file from the .env.example as stated above.
+```
 
-# app key with the key:generated above
-APP_KEY= 
-# ========================SCRAPPERS API=========================
-NEWSAPI_KEY=
-GUARDIAN_API_KEY=
-NYT_API_KEY=
+Update the following environment variables:
 
+```env
+APP_KEY= # paste generated key here
 
+NEWSAPI_KEY=your_api_key
+GUARDIAN_API_KEY=your_api_key
+NYT_API_KEY=your_api_key
+```
 
-### Step 3: Build Containers
+---
+
+### 🐳 Step 3: Build Docker Containers
 
 ```bash
 docker-compose build
 ```
 
-### Step 4: Run the Containers
+---
+
+### ▶️ Step 4: Start Containers
 
 ```bash
 docker-compose up -d
 ```
 
-### Step 5: Backend Setup
+---
+
+### 🧱 Step 5: Initialize Laravel
 
 ```bash
 docker exec -it laravel_app bash
+
+# Inside container:
 composer install
 php artisan migrate --seed
 php artisan storage:link
@@ -149,77 +88,206 @@ php artisan storage:link
 
 ---
 
+### 🔁 Scraping Articles
 
-## Schedule Scrapers (Optional)
-
-If not using cronjob in production, run manually:
+#### ▶️ Manual Scrape
 
 ```bash
 docker exec -it laravel_app 
 php artisan news:scrape
 ```
 
-Or add to crontab (in container):
+#### 🕒 Scheduled Scrape
+
+To enable periodic scraping:
 
 ```bash
 * * * * * cd /var/www && php artisan schedule:run >> /dev/null 2>&1
 ```
 
+(Inside the container or use Laravel Forge/Render cron job setup)
+
 ---
 
+### 📡 API Endpoints
 
-## Endpoints Overview
-
-### Auth
+#### 🔐 Auth
 
 * `POST /api/register`
 * `POST /api/login`
 * `POST /api/logout`
 
-### Articles
+#### 📰 Articles
+*(auth required)*
+* `GET /api/feed`
+* `GET /api/feed/{id}`
+* `GET /api/articles/search?q=term&source_id=1&category_id=2&from_date=2024-01-01&to_date=2025-01-01`
 
-* `GET /api/feed`: personalized feed (auth required)
-* `GET /api/feed/id`: Get single feed (auth required)
-* `GET /api/articles/search?q=term&source_id=1&category_id=2&from_date=2024-01-01&to_date=2025-01-01` (auth required)
-
-### Preferences
-
-* `GET /api/preferences/options ` (auth required)
-* `GET /api/preferences` (auth required)
-* `POST /api/preferences` (auth required)
-
----
-
-## Best Practices Followed
-
-* DRY and KISS principles
-* SOLID architecture in backend
-* Proper use of Laravel validation, relationships, and service layers
+#### 🎯 Preferences
+*(auth required)*
+* `GET /api/preferences/options`
+* `GET /api/preferences`
+* `POST /api/preferences`
 
 ---
 
-## 🧪 Testing
+### ✅ Best Practices Used
 
-* Test accounts can be registered manually
-* Sample scraping runs populate sources, authors, and categories automatically
-
----
-
-## Project Status
-
-* MVP Complete
-* Fully Dockerized
-* Meets all required features
-* Ready for deployment and testing
+* SOLID + DRY principles
+* Modular scraping service classes
+* Laravel validation + relationships
+* Simple and secure auth via Sanctum
 
 ---
 
-## Author
+### 🧪 Testing
 
-Charles Daudu – [GitHub](https://github.com/charleeBlaqTech)
+* Register new users
+* Run scrapers
+* Use `/feed` to view personalized content
+* Search and filter articles
 
 ---
 
-## License
+## 📜 Project Status
+
+✅ MVP Complete
+✅ Dockerized & ready for deployment
+✅ All endpoints functioning as expected
+
+---
+
+### 👨‍💻 Author
+
+**Charles Daudu**
+🔗 [GitHub](https://github.com/charleeBlaqTech)
+
+---
+
+## 📄 License
+
+MIT
+
+---
+
+---
+
+## 💻 Frontend – React + TypeScript
+
+Frontend for the **Innoscripta News Aggregator**, built with modern React, TypeScript, and Vite. It connects to the Laravel API for user auth, personalized feeds, and article search. Clean, responsive UI built with vanilla CSS.
+
+---
+
+### 🚀 Features
+
+* 🔐 **User Authentication**
+* 📰 **Personalized Article Feed**
+* 🔎 **Search & Filter**
+* ⚙️ **Preferences Page**
+* 🎨 **Responsive UI**
+
+---
+
+## ⚙️ Frontend Setup Instructions
+
+### 📦 Step 1: Clone the Repo
+
+```bash
+git clone https://github.com/charleeBlaqTech/innoscripta-news-aggregator-frontend.git
+cd innoscripta-news-aggregator-frontend
+```
+
+---
+
+### ⚙️ Step 2: Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+### ▶️ Step 3: Start Development Server
+
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`.
+
+---
+
+### 💪 Dev Tools Used
+
+* **Vite** – Lightning-fast build
+* **Axios** – HTTP client
+* **React Router** – Page navigation
+* **Vanilla CSS** – Inputs, buttons, layout styling
+* (Optional) **Redux Toolkit** – For global state
+
+---
+
+### 📂 Folder Structure
+
+```
+src/
+├── api/              # Axios API logic
+├── components/       # Reusable UI components (Toast, Loader, etc.)
+├── pages/            # Feed, Preferences, Auth, Search
+├── hooks/            # Custom hooks (e.g., useToast)
+├── store/            # Redux tool kit
+├── index.css         # CSS files
+├── main.tsx          # Entry point
+└── App.tsx           # Routing config
+```
+
+---
+
+### 🔐 Auth Workflow
+
+* Register or login
+* Access token stored securely
+* Authenticated requests attach token to headers
+
+---
+
+### 🗺️ Pages
+
+* `/auth` – Login/Register
+* `/feed` – Personalized article feed
+* `/preferences` – Select preferred author, source, category
+* `/search` – Filter/search across all articles
+* `/` – Homepage with personal info + redirect to login
+
+---
+
+### 🌐 Environment Setup
+
+Create a `.env` file and add:
+
+```env
+VITE_API_BASE_URL=http://localhost:8000/api
+```
+
+---
+
+### 📝 Project Status
+
+✅ MVP Complete
+✅ Styled and responsive
+✅ Works with Laravel backend
+✅ Can be deployed via Vercel, Netlify, or Render
+
+---
+
+### 👨‍💻 Author
+
+**Charles Daudu**
+🔗 [GitHub](https://github.com/charleeBlaqTech)
+🔗 [LinkedIn](https://linkedin.com/in/charleeblaqtech)
+
+---
+
+## 📄 License
 
 MIT
