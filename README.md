@@ -64,7 +64,6 @@ docker-compose up --build
 
 ```bash
 docker exec aggregator_app php artisan key:generate
-docker exec aggregator_app php artisan migrate --seed
 docker exec aggregator_app php artisan news:scrape
 ```
 
