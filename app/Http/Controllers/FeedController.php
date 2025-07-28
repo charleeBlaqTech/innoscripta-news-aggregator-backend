@@ -47,8 +47,9 @@ class FeedController extends Controller
             });
         }
 
-
-        $articles = $query->latest('published_at')->paginate(10);
+        // Allow frontend to set per_page via query param for pagination purpose
+        $perPage = $request->query('per_page', 10);
+        $articles = $query->latest('published_at')->paginate($perPage);
 
         return response()->json($articles);
     }

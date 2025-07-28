@@ -34,17 +34,24 @@ class NewsApiScraperService
 
                 $category = Category::firstOrCreate(['name' => 'general']);
 
-                Article::updateOrCreate(
-                ['url' => $articleData['url']],
-                [
-                'title' => $articleData['title'],
-                'content' => $articleData['content'] ?? '',
-                'published_at' => new Carbon($articleData['publishedAt']),
-                'source_id' => $source->id,
-                'author_id' => $author->id,
-                'category_id' => $category->id
-                ]
-                );
+                try {
+                    Article::updateOrCreate(
+                    ['url' => $articleData['url']],
+                    [
+                    'title' => $articleData['title'],
+                    'content' => $articleData['content'] ?? '',
+                    'published_at' => new Carbon($articleData['publishedAt']),
+                    'source_id' => $source->id,
+                    'author_id' => $author->id,
+                    'category_id' => $category->id
+                    ]
+                    );
+                } catch (\Exception $e) {
+                   Log::error('Error saving article', [
+                        'url' => $url,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
             }
         }
     }

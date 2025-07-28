@@ -9,6 +9,17 @@ use Illuminate\Support\Carbon;
 
 class ArticleController extends Controller
 {
+    public function all(Request $request)
+    {
+        $perPage = $request->query('per_page', 10); 
+
+        $articles = Article::with(['source', 'category', 'author'])
+            ->latest('published_at')
+            ->paginate($perPage);
+
+        return response()->json($articles);
+    }
+    
     public function search(Request $request)
     {
         $queryParam = $request->input('q');
@@ -16,6 +27,7 @@ class ArticleController extends Controller
         $categoryId = $request->input('category_id');
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
+        $perPage = $request->query('per_page', 10); 
 
         $query = Article::query()->with(['source', 'category', 'author']);
 
@@ -42,8 +54,9 @@ class ArticleController extends Controller
             $query->whereDate('published_at', '<=', $toDate);
         }
 
-        $articles = $query->latest()->get();
+        $articles = $query->latest('published_at')->paginate($perPage);
 
         return response()->json($articles);
     }
+
 }

@@ -38,19 +38,26 @@ class GuardianScraperService
 
                 $author = Author::firstOrCreate(['name' => $authorName]);
                 $category = Category::firstOrCreate(['name' => strtolower($categoryName)]);
-                Log::info('Saving article', ['title' => $title]);
 
-                Article::updateOrCreate(
-                ['url' => $url],
-                [
-                'title' => $title,
-                'content' => $content,
-                'published_at' => $publishedAt,
-                'source_id' => $source->id,
-                'author_id' => $author->id,
-                'category_id' => $category->id,
-                ]
-                );
+                try {
+                    Article::updateOrCreate(
+                        ['url' => $url],
+                        [
+                            'title' => $title,
+                            'content' => $content,
+                            'published_at' => $publishedAt,
+                            'source_id' => $source->id,
+                            'author_id' => $author->id,
+                            'category_id' => $category->id,
+                        ]
+                    );
+                } catch (\Exception $e) {
+                    Log::error('Error saving article', [
+                        'url' => $url,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+
             }
         }
     }

@@ -15,7 +15,8 @@ class UserPreferenceController extends Controller
         $preference = $user->preference;
 
         if (!$preference) {
-            return response()->json(['message' => 'No preferences found'], 404);
+            // MADE SURE I RETURN EMPTY ARRAY TO AVOID 404 error new user without existing preferences
+            return response()->json([]);
         }
 
         return response()->json([

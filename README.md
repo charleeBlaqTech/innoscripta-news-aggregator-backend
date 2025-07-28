@@ -59,18 +59,10 @@ NYT_API_KEY=your_api_key
 
 ---
 
-### 🐳 Step 3: Build Docker Containers
+### 🐳 Step 3: Build Docker images and start Containers
 
 ```bash
-docker-compose build
-```
-
----
-
-### ▶️ Step 4: Start Containers
-
-```bash
-docker-compose up -d
+docker-compose up --build
 ```
 
 ---
@@ -81,7 +73,6 @@ docker-compose up -d
 docker exec -it laravel_app bash
 
 # Inside container:
-composer install
 php artisan migrate --seed
 php artisan storage:link
 ```
@@ -93,7 +84,7 @@ php artisan storage:link
 #### ▶️ Manual Scrape
 
 ```bash
-docker exec -it laravel_app 
+#still inside the container after running the previous commands above======
 php artisan news:scrape
 ```
 
@@ -158,130 +149,6 @@ To enable periodic scraping:
 ---
 
 ### 👨‍💻 Author
-
-**Charles Daudu**
-🔗 [GitHub](https://github.com/charleeBlaqTech)
-
----
-
-## 📄 License
-
-MIT
-
----
-
----
-
-## 💻 Frontend – React + TypeScript
-
-Frontend for the **Innoscripta News Aggregator**, built with modern React, TypeScript, and Vite. It connects to the Laravel API for user auth, personalized feeds, and article search. Clean, responsive UI built with vanilla CSS.
-
----
-
-### 🚀 Features
-
-* 🔐 **User Authentication**
-* 📰 **Personalized Article Feed**
-* 🔎 **Search & Filter**
-* ⚙️ **Preferences Page**
-* 🎨 **Responsive UI**
-
----
-
-## ⚙️ Frontend Setup Instructions
-
-### 📦 Step 1: Clone the Repo
-
-```bash
-git clone https://github.com/charleeBlaqTech/innoscripta-news-aggregator-frontend.git
-cd innoscripta-news-aggregator-frontend
-```
-
----
-
-### ⚙️ Step 2: Install Dependencies
-
-```bash
-npm install
-```
-
----
-
-### ▶️ Step 3: Start Development Server
-
-```bash
-npm run dev
-```
-
-The app will be available at `http://localhost:5173`.
-
----
-
-### 💪 Dev Tools Used
-
-* **Vite** – Lightning-fast build
-* **Axios** – HTTP client
-* **React Router** – Page navigation
-* **Vanilla CSS** – Inputs, buttons, layout styling
-* (Optional) **Redux Toolkit** – For global state
-
----
-
-### 📂 Folder Structure
-
-```
-src/
-├── api/              # Axios API logic
-├── components/       # Reusable UI components (Toast, Loader, etc.)
-├── pages/            # Feed, Preferences, Auth, Search
-├── hooks/            # Custom hooks (e.g., useToast)
-├── store/            # Redux tool kit
-├── index.css         # CSS files
-├── main.tsx          # Entry point
-└── App.tsx           # Routing config
-```
-
----
-
-### 🔐 Auth Workflow
-
-* Register or login
-* Access token stored securely
-* Authenticated requests attach token to headers
-
----
-
-### 🗺️ Pages
-
-* `/auth` – Login/Register
-* `/feed` – Personalized article feed
-* `/preferences` – Select preferred author, source, category
-* `/search` – Filter/search across all articles
-* `/` – Homepage with personal info + redirect to login
-
----
-
-### 🌐 Environment Setup
-
-Create a `.env` file and add:
-
-```env
-VITE_API_BASE_URL=http://localhost:8000/api
-```
-
----
-
-### 📝 Project Status
-
-✅ MVP Complete
-✅ Styled and responsive
-✅ Works with Laravel backend
-✅ Can be deployed via Vercel, Netlify, or Render
-
----
-
-### 👨‍💻 Author
-
 **Charles Daudu**
 🔗 [GitHub](https://github.com/charleeBlaqTech)
 🔗 [LinkedIn](https://linkedin.com/in/charleeblaqtech)
@@ -291,3 +158,5 @@ VITE_API_BASE_URL=http://localhost:8000/api
 ## 📄 License
 
 MIT
+
+---
