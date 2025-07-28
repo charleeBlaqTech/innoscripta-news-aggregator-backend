@@ -13,7 +13,6 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
-      - ./path/to/local/code:/var/www
       - ./.env:/app/.env
     depends_on:
       - db
