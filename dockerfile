@@ -2,7 +2,21 @@
 FROM php:8.3.10
 
 # Install system dependencies
-RUN apt-get update -y && apt-get install -y openssl zip unzip git
+RUN apt-get update -y && apt-get install -y \
+    openssl \
+    zip \
+    unzip \
+    git \
+    libzip-dev \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    curl \
+    pkg-config
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql zip
+
 
 # Install PHP extensions (pdo_mysql and zip)
 RUN docker-php-ext-install pdo_mysql zip
