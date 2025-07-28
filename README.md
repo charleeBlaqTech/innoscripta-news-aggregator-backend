@@ -38,23 +38,15 @@ git clone https://github.com/charleeBlaqTech/innoscripta-news-aggregator-backend
 cd innoscripta-news-aggregator-backend
 ```
 
-### Step 2: Build Docker images and start Containers
-
-```bash
-docker-compose up --build
-```
-
-### Step 3: Configure `.env`
+### Step 2: Configure `.env`
 
 ```bash
 cp .env.example .env
 ```
 
-Update the following environment variables:
+Update the following environment  with your keys:
 
-```env
-APP_KEY= # paste generated key here
-
+```
 NEWSAPI_KEY=your_api_key
 GUARDIAN_API_KEY=your_api_key
 NYT_API_KEY=your_api_key
@@ -62,15 +54,18 @@ NYT_API_KEY=your_api_key
 
 ---
 
+### Step 3: Build Docker images and start Containers
+
+```bash
+docker-compose up --build
+```
 
 ### Step 4: Initialize Laravel and Scrape data
 
 ```bash
-docker exec -it aggregator_app bash
-
-php artisan migrate --seed
-php artisan key:generate
-php artisan news:scrape
+docker exec aggregator_app php artisan key:generate
+docker exec aggregator_app php artisan migrate --seed
+docker exec aggregator_app php artisan news:scrape
 ```
 
 ### API Endpoints

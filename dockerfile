@@ -4,9 +4,10 @@ FROM php:8.3.10
 # Install system dependencies
 RUN apt-get update -y && apt-get install -y openssl zip unzip git
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Install PHP extensions (pdo_mysql and zip)
+RUN docker-php-ext-install pdo_mysql zip
 
-RUN apt-get update && apt-get install -y libpg-dev
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN php -m | grep mbstring
 
