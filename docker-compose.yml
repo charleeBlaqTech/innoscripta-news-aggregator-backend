@@ -1,35 +1,44 @@
 version: "3.8"
 
+networks:
+  application:
+    driver: bridge
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel_app
-    restart: unless-stopped
+    container_name: aggregator_app
     ports:
       - "8000:8000"
     volumes:
-      - .:/var/www
+      - .:/app
+      - ./path/to/local/code:/var/www
     depends_on:
       - db
+    networks:
+      - application
+    entrypoint: ['/bin/sh', '-c']
     env_file:
       - .env
-    command: php artisan serve --host=0.0.0.0 --port=8000
+    command:
+      - | 
+        composer install 
+        php artisan migrate --seed
+        php artisan serve --host=0.0.0.0 --port=8000
 
   db:
-    image: mysql:8.0
-    container_name: mysql_db
-    restart: unless-stopped
+    image: mysql:latest
     ports:
-      - "3307:3306"  
+      - "3307:3306"
+    volumes:
+      - ./data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: innoscripta_news_db
-      MYSQL_USER: laravel
+      MYSQL_USER: innoscripta
       MYSQL_PASSWORD: secret
-    volumes:
-      - dbdata:/var/lib/mysql
+    networks:
+      - application
+    container_name: aggregator_db
 
-volumes:
-  dbdata:

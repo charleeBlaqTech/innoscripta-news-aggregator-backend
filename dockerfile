@@ -1,33 +1,26 @@
 # Base PHP image
-FROM php:8.2-fpm
+FROM php:8.3.10
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git curl unzip zip nano \
-    libpng-dev libjpeg-dev libfreetype6-dev \
-    libonig-dev libxml2-dev libzip-dev \
-    libcurl4-openssl-dev libssl-dev \
-    default-mysql-client \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
+RUN apt-get update -y && apt-get install -y openssl zip unzip git
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN apt-get update && apt-get install -y libpg-dev
+
+RUN php -m | grep mbstring
 
 # Set working directory
-WORKDIR /var/www
+WORKDIR /app
 
-# Copy the entire application source
-COPY . .
+# copy application file to container
+COPY . /app
 
+RUN composer install
 
-# Set permissions
-RUN mkdir -p bootstrap/cache storage/logs storage/framework && \
-    chmod -R 775 bootstrap/cache storage
-
-# Run composer install after source code is present (artisan file included)
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+CMD php artisan serve --host=0.0.0.0 --port=8000
 
 
 # Expose port & run Laravel dev server
 EXPOSE 8000
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+
